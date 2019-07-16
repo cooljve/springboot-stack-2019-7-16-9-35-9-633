@@ -11,6 +11,8 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Arrays;
+
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.when;
@@ -39,4 +41,22 @@ class EmployeeControllerTest {
         .andExpect(jsonPath("$.age", is(22)))
         .andExpect(jsonPath("$.gender", is("female")));
   }
+
+  @Test
+  void shoule_return_employees_find_all() throws Exception {
+    Employee employee = new Employee(1, "Joi", 22, "female");
+    Employee employee1 = new Employee(2, "Jo", 20, "female");
+    Employee employee2 = new Employee(3, "J", 2, "male");
+    when(service.findAll()).thenReturn(Arrays.asList(employee,employee1,employee2));
+
+    ResultActions result = mvc.perform(get("/employees"));
+
+    result.andExpect(status().isOk())
+        .andExpect(jsonPath("$.[0].name", is("Joi")))
+        .andExpect(jsonPath("$.[1].name", is("Jo")))
+        .andExpect(jsonPath("$.[2].name", is("J")));
+  }
+
+
+
 }
