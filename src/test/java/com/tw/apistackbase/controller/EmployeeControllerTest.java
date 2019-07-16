@@ -46,7 +46,7 @@ class EmployeeControllerTest {
   void shoule_return_employees_find_all() throws Exception {
     Employee employee = new Employee(1, "Joi", 22, "female");
     Employee employee1 = new Employee(2, "Jo", 20, "female");
-    Employee employee2 = new Employee(3, "J", 2, "male");
+    Employee employee2 = new Employee(3, "J", 21, "male");
     when(service.findAll()).thenReturn(Arrays.asList(employee,employee1,employee2));
 
     ResultActions result = mvc.perform(get("/employees"));
@@ -55,6 +55,21 @@ class EmployeeControllerTest {
         .andExpect(jsonPath("$.[0].name", is("Joi")))
         .andExpect(jsonPath("$.[1].name", is("Jo")))
         .andExpect(jsonPath("$.[2].name", is("J")));
+  }
+
+  @Test
+  void shoule_return_employees_find_by_page_and_pageSize() throws Exception {
+    Employee employee = new Employee(1, "Joi", 22, "female");
+    Employee employee1 = new Employee(2, "Jo", 20, "female");
+    Employee employee2 = new Employee(3, "J", 21, "male");
+    when(service.findByPageAndPageSize(anyInt(),anyInt())).thenReturn(Arrays.asList(employee,employee1,employee2));
+
+    ResultActions result = mvc.perform(get("/employees/page?page=1&pageSize=1"));
+
+    result.andExpect(status().isOk())
+        .andExpect(jsonPath("$.[0].age", is(22)))
+        .andExpect(jsonPath("$.[1].age", is(20)))
+        .andExpect(jsonPath("$.[2].age", is(21)));
   }
 
 
