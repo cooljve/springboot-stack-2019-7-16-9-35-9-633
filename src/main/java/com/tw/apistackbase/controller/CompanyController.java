@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value="/companies")
+@RequestMapping("/companies")
 public class CompanyController {
+
   @Autowired
   private CompanyService companyService;
 
