@@ -22,7 +22,7 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
   }
 
   @Override
-  public Employee findById(String employeeId) {
+  public Employee findById(int employeeId) {
     return map.get(employeeId);
   }
 

@@ -7,7 +7,7 @@ import java.util.List;
 public interface EmployeeRepository {
   List<Employee> findAll();
 
-  Employee findById(String employeeId);
+  Employee findById(int employeeId);
 
   Employee add(Employee employee);
 
