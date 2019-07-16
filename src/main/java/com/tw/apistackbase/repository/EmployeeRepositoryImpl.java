@@ -28,11 +28,15 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
 
   @Override
   public Employee add(Employee employee) {
-    String uuid = UUID.randomUUID().toString();
-    Integer id = Integer.valueOf(uuid);
-    employee.setId(id);
-    map.put(id, employee);
-    return employee;
+    int id;
+    id = new Random().nextInt(1000);
+    while (true) {
+      if (!map.containsKey(id)) {
+        employee.setId(id);
+        map.put(id, employee);
+        return employee;
+      }
+    }
   }
 
   @Override
