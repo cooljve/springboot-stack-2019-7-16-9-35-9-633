@@ -65,7 +65,8 @@ public class EmployeeRepositoryImpl implements EmployeeRepository {
   @Override
   public List<Employee> findByPageAndPageSize(int page, int pageSize) {
     return new ArrayList<>(map.values()).stream()
-        .sorted(Comparator.comparing(Employee::getId))
-        .limit(page * pageSize).collect(Collectors.toList());
+        .skip((Math.max(0, page - 1) * pageSize))
+        .limit(pageSize)
+        .collect(Collectors.toList());
   }
 }

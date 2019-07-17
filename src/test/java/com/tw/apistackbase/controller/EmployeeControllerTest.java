@@ -20,9 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -112,6 +110,26 @@ class EmployeeControllerTest {
     jsonObject.put("gender", "female");
 
     ResultActions result = mvc.perform(post("/employees")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(jsonObject.toString()));
+
+    result.andExpect(status().isOk())
+        .andExpect(jsonPath("$.name", is("Joi")))
+        .andExpect(jsonPath("$.age", is(22)))
+        .andExpect(jsonPath("$.gender", is("female")));
+  }
+
+  @Test
+  void should_return_employee_update_employee() throws Exception {
+    Employee employee = new Employee(1, "Joi", 22, "female");
+    when(service.update(any(),anyInt())).thenReturn(employee);
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put("id", 1);
+    jsonObject.put("name", "Joi");
+    jsonObject.put("age", 22);
+    jsonObject.put("gender", "female");
+
+    ResultActions result = mvc.perform(put("/employees/{employeeId}",1)
         .contentType(MediaType.APPLICATION_JSON)
         .content(jsonObject.toString()));
 

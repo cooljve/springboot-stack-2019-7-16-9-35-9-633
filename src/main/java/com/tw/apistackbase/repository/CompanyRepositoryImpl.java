@@ -60,8 +60,9 @@ public class CompanyRepositoryImpl implements CompanyRepository {
   @Override
   public List<Company> findByPageAndPageSize(int page, int pageSize) {
     return new ArrayList<>(map.values()).stream()
-        .sorted(Comparator.comparing(Company::getCompanyName))
-        .limit(page * pageSize).collect(Collectors.toList());
+        .skip(Math.max(0, page - 1) * pageSize)
+        .limit(pageSize)
+        .collect(Collectors.toList());
   }
 
   @Override
