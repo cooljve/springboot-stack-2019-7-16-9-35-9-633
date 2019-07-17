@@ -1,9 +1,9 @@
 package com.tw.apistackbase.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tw.apistackbase.model.Company;
 import com.tw.apistackbase.model.Employee;
 import com.tw.apistackbase.service.CompanyService;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,8 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.Arrays;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -50,12 +50,12 @@ class CompanyControllerTest {
     Employee employee = new Employee(1, "Joi", 22, "female");
     Company company = new Company("aaa", 10, Arrays.asList(employee));
     when(service.add(any())).thenReturn(company);
-    JSONObject jsonObject = new JSONObject();
-    jsonObject.put("companyName", "aaa");
+    ObjectMapper mapper = new ObjectMapper();
+    String companyJson=mapper.writeValueAsString(company);
 
     ResultActions result = mvc.perform(post("/companies")
         .contentType(MediaType.APPLICATION_JSON)
-        .content(jsonObject.toString()));
+        .content(companyJson));
 
     result.andExpect(status().isOk())
         .andExpect(jsonPath("$.companyName", is("aaa")));
@@ -66,12 +66,12 @@ class CompanyControllerTest {
     Employee employee = new Employee(1, "Joi", 22, "female");
     Company company = new Company("aaa", 10, Arrays.asList(employee));
     when(service.update(any(),anyString())).thenReturn(company);
-    JSONObject jsonObject = new JSONObject();
-    jsonObject.put("companyName", "aaa");
+    ObjectMapper mapper = new ObjectMapper();
+    String companyJson=mapper.writeValueAsString(company);
 
     ResultActions result = mvc.perform(put("/companies/{companyName}",company.getCompanyName())
         .contentType(MediaType.APPLICATION_JSON)
-        .content(jsonObject.toString()));
+        .content(companyJson));
 
     result.andExpect(status().isOk())
         .andExpect(jsonPath("$.companyName", is("aaa")));

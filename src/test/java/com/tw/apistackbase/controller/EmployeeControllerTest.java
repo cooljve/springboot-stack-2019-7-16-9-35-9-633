@@ -1,8 +1,8 @@
 package com.tw.apistackbase.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.tw.apistackbase.model.Employee;
 import com.tw.apistackbase.service.EmployeeService;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +16,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.Arrays;
 
 import static org.hamcrest.Matchers.is;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -78,7 +76,7 @@ class EmployeeControllerTest {
     Employee employee2 = new Employee(3, "J", 21, "male");
     when(service.findByPageAndPageSize(anyInt(), anyInt())).thenReturn(Arrays.asList(employee, employee1, employee2));
 
-    ResultActions result = mvc.perform(get("/employees?page={page}&pageSize={pageSize}",1,1));
+    ResultActions result = mvc.perform(get("/employees?page={page}&pageSize={pageSize}", 1, 1));
 
     result.andExpect(status().isOk())
         .andExpect(jsonPath("$.[0].age", is(22)))
@@ -92,7 +90,7 @@ class EmployeeControllerTest {
     Employee employee1 = new Employee(2, "Jo", 20, "female");
     when(service.findByGender(anyString())).thenReturn(Arrays.asList(employee, employee1));
 
-    ResultActions result = mvc.perform(get("/employees?gender={gender}","female"));
+    ResultActions result = mvc.perform(get("/employees?gender={gender}", "female"));
 
     result.andExpect(status().isOk())
         .andExpect(jsonPath("$.[0].gender", is("female")))
@@ -103,15 +101,12 @@ class EmployeeControllerTest {
   void should_return_employee_add_employee() throws Exception {
     Employee employee = new Employee(1, "Joi", 22, "female");
     when(service.add(any())).thenReturn(employee);
-    JSONObject jsonObject = new JSONObject();
-    jsonObject.put("id", 1);
-    jsonObject.put("name", "Joi");
-    jsonObject.put("age", 22);
-    jsonObject.put("gender", "female");
+    ObjectMapper mapper = new ObjectMapper();
+    String employeeJson = mapper.writeValueAsString(employee);
 
     ResultActions result = mvc.perform(post("/employees")
         .contentType(MediaType.APPLICATION_JSON)
-        .content(jsonObject.toString()));
+        .content(employeeJson));
 
     result.andExpect(status().isOk())
         .andExpect(jsonPath("$.name", is("Joi")))
@@ -122,16 +117,13 @@ class EmployeeControllerTest {
   @Test
   void should_return_employee_update_employee() throws Exception {
     Employee employee = new Employee(1, "Joi", 22, "female");
-    when(service.update(any(),anyInt())).thenReturn(employee);
-    JSONObject jsonObject = new JSONObject();
-    jsonObject.put("id", 1);
-    jsonObject.put("name", "Joi");
-    jsonObject.put("age", 22);
-    jsonObject.put("gender", "female");
+    when(service.update(any(), anyInt())).thenReturn(employee);
+    ObjectMapper mapper = new ObjectMapper();
+    String employeeJson = mapper.writeValueAsString(employee);
 
-    ResultActions result = mvc.perform(put("/employees/{employeeId}",1)
+    ResultActions result = mvc.perform(put("/employees/{employeeId}", 1)
         .contentType(MediaType.APPLICATION_JSON)
-        .content(jsonObject.toString()));
+        .content(employeeJson));
 
     result.andExpect(status().isOk())
         .andExpect(jsonPath("$.name", is("Joi")))
