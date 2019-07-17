@@ -20,6 +20,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -48,6 +49,16 @@ class EmployeeControllerTest {
   }
 
   @Test
+  void shoule_return_employee_delete() throws Exception {
+    Employee employee = new Employee(1, "Joi", 22, "female");
+    when(service.delete(anyInt())).thenReturn(employee);
+
+    ResultActions result = mvc.perform(delete("/employees/{employeeId}", employee.getId()));
+
+    result.andExpect(status().isOk());
+  }
+
+  @Test
   void shoule_return_employees_find_all() throws Exception {
     Employee employee = new Employee(1, "Joi", 22, "female");
     Employee employee1 = new Employee(2, "Jo", 20, "female");
@@ -69,7 +80,7 @@ class EmployeeControllerTest {
     Employee employee2 = new Employee(3, "J", 21, "male");
     when(service.findByPageAndPageSize(anyInt(), anyInt())).thenReturn(Arrays.asList(employee, employee1, employee2));
 
-    ResultActions result = mvc.perform(get("/employees/page?page=1&pageSize=1"));
+    ResultActions result = mvc.perform(get("/employees?page={page}&pageSize={pageSize}",1,1));
 
     result.andExpect(status().isOk())
         .andExpect(jsonPath("$.[0].age", is(22)))
@@ -83,7 +94,7 @@ class EmployeeControllerTest {
     Employee employee1 = new Employee(2, "Jo", 20, "female");
     when(service.findByGender(anyString())).thenReturn(Arrays.asList(employee, employee1));
 
-    ResultActions result = mvc.perform(get("/employees/gender?gender=female"));
+    ResultActions result = mvc.perform(get("/employees?gender={gender}","female"));
 
     result.andExpect(status().isOk())
         .andExpect(jsonPath("$.[0].gender", is("female")))

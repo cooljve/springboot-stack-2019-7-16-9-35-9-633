@@ -24,12 +24,12 @@ public class EmployeeController {
     return employeeService.findById(employeeId);
   }
 
-  @GetMapping("page")
+  @GetMapping(params = {"page","pageSize"})
   public List<Employee> findByPageAndPageSize(@RequestParam int page, @RequestParam int pageSize) {
     return employeeService.findByPageAndPageSize(page, pageSize);
   }
 
-  @GetMapping("gender")
+  @GetMapping(params = "gender")
   public List<Employee> findByGender(@RequestParam String gender) {
     return employeeService.findByGender(gender);
   }

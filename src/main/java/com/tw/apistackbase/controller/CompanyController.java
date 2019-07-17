@@ -30,7 +30,7 @@ public class CompanyController {
     return companyService.findEmployeesByCompanyName(companyName);
   }
 
-  @GetMapping("page")
+  @GetMapping(params = {"page","pageSize"})
   public List<Company> findByPageAndPageSize(@RequestParam int page, @RequestParam int pageSize) {
     return companyService.findByPageAndPageSize(page, pageSize);
   }
