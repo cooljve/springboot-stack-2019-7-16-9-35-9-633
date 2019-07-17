@@ -20,9 +20,7 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -56,6 +54,22 @@ class CompanyControllerTest {
     jsonObject.put("companyName", "aaa");
 
     ResultActions result = mvc.perform(post("/companies")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(jsonObject.toString()));
+
+    result.andExpect(status().isOk())
+        .andExpect(jsonPath("$.companyName", is("aaa")));
+  }
+
+  @Test
+  void should_return_company_update_company() throws Exception {
+    Employee employee = new Employee(1, "Joi", 22, "female");
+    Company company = new Company("aaa", 10, Arrays.asList(employee));
+    when(service.update(any(),anyString())).thenReturn(company);
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put("companyName", "aaa");
+
+    ResultActions result = mvc.perform(put("/companies/{companyName}",company.getCompanyName())
         .contentType(MediaType.APPLICATION_JSON)
         .content(jsonObject.toString()));
 
