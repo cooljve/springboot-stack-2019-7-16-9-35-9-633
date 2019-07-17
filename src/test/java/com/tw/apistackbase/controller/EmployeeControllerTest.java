@@ -2,11 +2,13 @@ package com.tw.apistackbase.controller;
 
 import com.tw.apistackbase.model.Employee;
 import com.tw.apistackbase.service.EmployeeService;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
@@ -14,10 +16,12 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.Arrays;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -84,6 +88,26 @@ class EmployeeControllerTest {
     result.andExpect(status().isOk())
         .andExpect(jsonPath("$.[0].gender", is("female")))
         .andExpect(jsonPath("$.[1].gender", is("female")));
+  }
+
+  @Test
+  void should_return_employee_add_employee() throws Exception {
+    Employee employee = new Employee(1, "Joi", 22, "female");
+    when(service.add(any())).thenReturn(employee);
+    JSONObject jsonObject = new JSONObject();
+    jsonObject.put("id", 1);
+    jsonObject.put("name", "Joi");
+    jsonObject.put("age", 22);
+    jsonObject.put("gender", "female");
+
+    ResultActions result = mvc.perform(post("/employees")
+        .contentType(MediaType.APPLICATION_JSON)
+        .content(jsonObject.toString()));
+
+    result.andExpect(status().isOk())
+        .andExpect(jsonPath("$.name", is("Joi")))
+        .andExpect(jsonPath("$.age", is(22)))
+        .andExpect(jsonPath("$.gender", is("female")));
   }
 
 

@@ -3,7 +3,10 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/springboot-stack.iml" filepath="$PROJECT_DIR$/.idea/modules/springboot-stack.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/springboot-stack.iml" filepath="$PROJECT_DIR$/.idea/modules/springboot-stack.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/springboot-stack_main.iml" filepath="$PROJECT_DIR$/.idea/modules/springboot-stack_main.iml" group="springboot-stack" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/springboot-stack_main.iml" filepath="$PROJECT_DIR$/.idea/modules/springboot-stack_main.iml" group="springboot-stack" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/springboot-stack_test.iml" filepath="$PROJECT_DIR$/.idea/modules/springboot-stack_test.iml" group="springboot-stack" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/springboot-stack_test.iml" filepath="$PROJECT_DIR$/.idea/modules/springboot-stack_test.iml" group="springboot-stack" />
     </modules>
   </component>
